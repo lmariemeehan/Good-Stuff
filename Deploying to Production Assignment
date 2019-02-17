@@ -1,0 +1,12 @@
+# Exercises
+
+### Before You Begin: Create a new Git feature branch for this assignment. See Git Checkpoint Workflow: Before Each Assignment for details.
+
+> For this assignment, read about the concept of release early, release often and write at least one reason for and one against this practice in the submission box.
+
+Answer:
+Release early, release often is a good idea because it ensures the software will be created with the users in mind and conforms to their needs. You would release or re-release, get feedback from the customers, and if you take their advice then you could potentially build something that they might want to use.
+
+One reason you may not want to follow the release early, release often philosophy is that you could repeatedly deploy something with irritating bugs which could lose your customer's patience with your product (and ultimately lose your customers).
+
+### When You're Done: Commit your assignment work in Git. See Git Checkpoint Workflow: After Each Assignment for details.
