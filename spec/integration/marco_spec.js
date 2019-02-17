@@ -13,7 +13,7 @@ describe("routes : marco", () => {
 //#3
       request.get(base, (err, res, body) => {
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual('polo');
+        expect(res.body).toContain('polo');
 //#4
         done();
       });
