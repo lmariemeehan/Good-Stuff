@@ -31,7 +31,7 @@ const Post = require("../../src/db/models").Post;
         });
       });
     });
-  });
+
 
   describe("#create()", () => {
 
@@ -72,24 +72,20 @@ const Post = require("../../src/db/models").Post;
 
     it("should associate a topic and a post together", (done) => {
 
-// #1
       Topic.create({
         title: "Challenges of interstellar travel",
         description: "1. The Wi-Fi is terrible"
       })
       .then((newTopic) => {
-
-// #2
         expect(this.post.topicId).toBe(this.topic.id);
-// #3
         this.post.setTopic(newTopic)
         .then((post) => {
-// #4
           expect(post.topicId).toBe(newTopic.id);
           done();
 
         });
       })
     });
+  });
 
   });
