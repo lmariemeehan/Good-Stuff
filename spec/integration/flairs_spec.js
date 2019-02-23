@@ -3,31 +3,43 @@ const server = require("../../src/server");
 const base = "http://localhost:3000/posts";
 
 const sequelize = require("../../src/db/models/index").sequelize;
+const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const Flair = require("../../src/db/models").Flair;
 
   describe("routes : flairs", () => {
     beforeEach((done) => {
+      this.topic;
       this.post;
       this.flair;
       sequelize.sync({force: true}).then((res) => {
 
-        Post.create({
+        Topic.create({
           title: "Winter Games",
           body: "Post your Winter Games stories."
         })
+        .then((topic) => {
+          this.topic = topic;
+
+        Post.create({
+          title: "Snowball Fighting",
+          body: "So much snow!",
+          topicId: this.topic.id
+        })
         .then((post) => {
           this.post = post;
+          done();
+        })
 
-          Flair.create({
-            name: "Stories",
-            color: "white",
-            postId: this.post.id
-          })
-          .then((flair) => {
-            this.flair = flair;
-            done();
-          })
+        Flair.create({
+          name: "Stories",
+          color: "white",
+          postId: this.post.id
+        })
+        .then((flair) => {
+          this.flair = flair;
+          done();
+        })
           .catch((err) => {
             console.log(err);
             done();
@@ -50,17 +62,17 @@ const Flair = require("../../src/db/models").Flair;
             const options = {
               url: `${base}/${this.post.id}/flairs/create`,
               form: {
-                name: "Interesting stuff",
-                color: "teal"
+                name: "Stories",
+                color: "white"
               }
             };
             request.flair(options,
               (err, res, body) => {
-                Flair.findOne({where: {name: "Interesting stuff"}})
+                Flair.findOne({where: {name: "Stories"}})
                 .then((flair) => {
                   expect(flair).not.toBeNull();
-                  expect(flair.name).toBe("Interesting stuff");
-                  expect(flair.color).toBe("teal");
+                  expect(flair.name).toBe("Stories");
+                  expect(flair.color).toBe("white");
                   expect(flair.postId).not.toBeNull();
                   done();
                 })
@@ -101,7 +113,7 @@ const Flair = require("../../src/db/models").Flair;
           it("should render a view with an edit flair form", (done) => {
             request.get(`${base}/${this.post.id}/flairs/${this.flair.id}/edit`, (err, res, body) => {
               expect(err).toBeNull();
-              expect(body).toContain("Edit Post");
+              expect(body).toContain("Edit Flair");
               expect(body).toContain("Stories");
               done();
             });
@@ -113,8 +125,8 @@ const Flair = require("../../src/db/models").Flair;
           request.flair({
             url: `${base}/${this.post.id}/flairs/${this.flair.id}/update`,
             form: {
-              name: "Snowman Building Competition",
-              color: "purple"
+              name: "Stories",
+              color: "white"
             }
           }, (err, res, body) => {
             expect(res.statusCode).toBe(302);
@@ -125,7 +137,8 @@ const Flair = require("../../src/db/models").Flair;
             const options = {
               url: `${base}/${this.post.id}/flairs/${this.flair.id}/update`,
               form: {
-                name: "Snowman Building Competition"
+                name: "Stories",
+                color: "white"
               }
             };
             request.flair(options,
@@ -135,7 +148,7 @@ const Flair = require("../../src/db/models").Flair;
                 where: {id: this.flair.id}
               })
               .then((flair) => {
-                expect(flair.name).toBe("Snowman Building Competition");
+                expect(flair.name).toBe("Stories");
                 done();
               });
             });

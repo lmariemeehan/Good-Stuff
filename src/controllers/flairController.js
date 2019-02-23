@@ -2,13 +2,13 @@ const flairQueries = require("../db/queries.flairs.js");
 
   module.exports = {
     new(req, res, next){
-    res.render("flairs/new", {flairId: req.params.flairId});
+    res.render("flairs/new", {postId: req.params.postId});
   },
 
     create(req, res, next){
       let newFlair= {
-        name: req.body.title,
-        color: req.body.body,
+        name: req.body.name,
+        color: req.body.color,
         postId: req.params.postId
       };
       flairQueries.addFlair(newFlair, (err, flair) => {
