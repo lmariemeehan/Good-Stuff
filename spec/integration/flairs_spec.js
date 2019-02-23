@@ -102,7 +102,7 @@ const Flair = require("../../src/db/models").Flair;
              Flair.findById(1)
              .then((flair) => {
                expect(err).toBeNull();
-               expect(post).toBeNull();
+               expect(flair).toBeNull();
                done();
              })
            });

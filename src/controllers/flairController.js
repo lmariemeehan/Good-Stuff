@@ -41,7 +41,7 @@ const flairQueries = require("../db/queries.flairs.js");
     },
 
     edit(req, res, next){
-      flairQueries.getPost(req.params.id, (err, flair) => {
+      flairQueries.getFlair(req.params.id, (err, flair) => {
         if(err || flair == null){
           res.redirect(404, "/");
         } else {
