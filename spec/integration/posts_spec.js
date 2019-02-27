@@ -41,7 +41,6 @@ const User = require("../../src/db/models").User;
            })
          })
        });
-     });
 
       describe("GET /topics/:topicId/posts/new", () => {
         it("should render a new post form", (done) => {
@@ -176,5 +175,5 @@ const User = require("../../src/db/models").User;
              });
          });
        });
-
+     });
   });

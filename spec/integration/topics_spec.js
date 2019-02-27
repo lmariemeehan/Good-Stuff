@@ -22,7 +22,6 @@ const User = require("../../src/db/models").User;
           done();
         });
       });
-    });
 
     describe("admin user performing CRUD actions for Topic", () => {
       beforeEach((done) => {
@@ -275,9 +274,10 @@ const User = require("../../src/db/models").User;
              .then((topic) => {
                expect(topic.title).toBe("JS Frameworks");// confirm title is unchanged
                done();
-             });
-           });
-       });
+              });
+            });
+          });
+        });
       });
     });
   });
