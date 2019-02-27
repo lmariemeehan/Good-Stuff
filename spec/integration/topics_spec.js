@@ -24,6 +24,7 @@ const User = require("../../src/db/models").User;
       });
     });
 
+    //CONTEXT OF ADMIN USER
     describe("admin user performing CRUD actions for Topic", () => {
       beforeEach((done) => {
         User.create({
@@ -158,6 +159,7 @@ const User = require("../../src/db/models").User;
 
     });
 
+    //CONTEXT OF MEMBER USER
     describe("member user performing CRUD actions for Topic", () => {
       beforeEach((done) => {
         request.get({
