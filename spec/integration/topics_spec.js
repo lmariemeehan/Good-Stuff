@@ -22,7 +22,7 @@ const User = require("../../src/db/models").User;
           done();
         });
       });
-    });
+
 
     //CONTEXT OF ADMIN USER
     describe("admin user performing CRUD actions for Topic", () => {
@@ -281,5 +281,7 @@ const User = require("../../src/db/models").User;
            });
        });
       });
+    });
+
     });
   });
