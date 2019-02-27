@@ -41,7 +41,7 @@ const Post = require("./models").Post;
         })
       },
 
-     deleteTopic(id, callback){
+     deleteTopic(req, callback){
        // #1
            return Topic.findById(req.params.id)
            .then((topic) => {
