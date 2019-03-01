@@ -1,4 +1,3 @@
-// #1
 const request = require("request");
 const server = require("../../src/server");
 const base = "http://localhost:3000/topics/";
@@ -10,10 +9,7 @@ const User = require("../../src/db/models").User;
 const Comment = require("../../src/db/models").Comment;
 
 describe("routes : comments", () => {
-
   beforeEach((done) => {
-
-// #2
     this.user;
     this.topic;
     this.post;
@@ -21,7 +17,6 @@ describe("routes : comments", () => {
 
     sequelize.sync({force: true}).then((res) => {
 
-// #3
       User.create({
         email: "starman@tesla.com",
         password: "Trekkie4lyfe"
@@ -38,14 +33,14 @@ describe("routes : comments", () => {
             userId: this.user.id
           }]
         }, {
-          include: {                        //nested creation of posts
+          include: {
             model: Post,
             as: "posts"
           }
         })
         .then((topic) => {
-          this.topic = topic;                 // store topic
-          this.post = this.topic.posts[0];  // store post
+          this.topic = topic;
+          this.post = this.topic.posts[0];
 
           Comment.create({
             body: "ay caramba!!!!!",
@@ -53,7 +48,7 @@ describe("routes : comments", () => {
             postId: this.post.id
           })
           .then((coment) => {
-            this.comment = coment;             // store comment
+            this.comment = coment;
             done();
           })
           .catch((err) => {
@@ -69,11 +64,8 @@ describe("routes : comments", () => {
     });
   });
 
-  //test suites will go there
-  // #1
+  //GUEST USER
      describe("guest attempting to perform CRUD actions for Comment", () => {
-
-  // #2
        beforeEach((done) => {    // before each suite in this context
          request.get({           // mock authentication
            url: "http://localhost:3000/auth/fake",
@@ -87,9 +79,7 @@ describe("routes : comments", () => {
          );
        });
 
-  // #3
-       describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
-
+      describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
          it("should not create a new comment", (done) => {
            const options = {
              url: `${base}${this.topic.id}/posts/${this.post.id}/comments/create`,
@@ -99,7 +89,6 @@ describe("routes : comments", () => {
            };
            request.post(options,
              (err, res, body) => {
-  // #4
                Comment.findOne({where: {body: "This comment is amazing!"}})
                .then((comment) => {
                  expect(comment).toBeNull();   // ensure no comment was created
@@ -112,37 +101,32 @@ describe("routes : comments", () => {
              }
            );
          });
-       });
+      });
 
-  // #5
      describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
-
-         it("should not delete the comment with the associated ID", (done) => {
-           Comment.all()
+        it("should not delete the comment with the associated ID", (done) => {
+          Comment.all()
            .then((comments) => {
              const commentCountBeforeDelete = comments.length;
-
              expect(commentCountBeforeDelete).toBe(1);
-
-             request.post(
+              request.post(
                `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
-               (err, res, body) => {
-               Comment.all()
-               .then((comments) => {
+                (err, res, body) => {
+                Comment.all()
+                .then((comments) => {
                  expect(err).toBeNull();
                  expect(comments.length).toBe(commentCountBeforeDelete);
-                 done();
+                done();
                })
-
              });
            })
          });
        });
      }); //end context for guest user
 
- // #1
-     describe("signed in user performing CRUD actions for Comment", () => {
 
+  //SIGNED IN MEMBER
+     describe("signed in user performing CRUD actions for Comment", () => {
        beforeEach((done) => {    // before each suite in this context
          request.get({           // mock authentication
            url: "http://localhost:3000/auth/fake",
@@ -157,9 +141,7 @@ describe("routes : comments", () => {
          );
        });
 
-// #2
-     describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
-
+      describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
        it("should create a new comment and redirect", (done) => {
          const options = {
            url: `${base}${this.topic.id}/posts/${this.post.id}/comments/create`,
@@ -185,16 +167,12 @@ describe("routes : comments", () => {
        });
      });
 
-// #3
      describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
-
-       it("should delete the comment with the associated ID", (done) => {
-         Comment.all()
+      it("should delete the comment with the associated ID", (done) => {
+        Comment.all()
          .then((comments) => {
            const commentCountBeforeDelete = comments.length;
-
            expect(commentCountBeforeDelete).toBe(1);
-
            request.post(
             `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
              (err, res, body) => {
@@ -202,17 +180,44 @@ describe("routes : comments", () => {
              Comment.all()
              .then((comments) => {
                expect(err).toBeNull();
-               expect(comments.length).toBe(commentCountBeforeDelete - 1);
-               done();
-             })
-
-           });
-         })
-
+              expect(comments.length).toBe(commentCountBeforeDelete - 1);
+             done();
+            })
+          });
+        })
        });
 
-     });
+       //ASSIGNMENT QUESTION
+       it("should not delete comments that belong to another user", (done) => {
+         User.create({               // create an unassociated user
+           email: "bob@example.com",
+           password: "password",
+         })
+         .then((user) => {        // pass the user down
+            expect(this.comment.userId).toBe(this.comment.userId);
+            Comment.all()
+            .then((comments) => {
+              const commentCountBeforeDelete = comments.length;
+              expect(commentCountBeforeDelete).toBe(1);
+              request.post(
+                `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                (err, res, body) => {
+                Comment.all()
+                .then((comments) => {
+                  expect(err).toBeNull();
+                  expect(comments.length).toBe(commentCountBeforeDelete);
+                  expect(comments.userId).toBe(this.comments.user.id);
+                  done();
+                })
+                .catch((err) => {
+                console.log(err);
+                done();
+                });
+              });
+            });
+          });
+        });
+      });
+    }); //end context for signed in member
 
-   }); //end context for signed in user
-
-});
+   });
