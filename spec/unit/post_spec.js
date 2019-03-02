@@ -38,7 +38,7 @@ const User = require("../../src/db/models").User;
           })
         })
       });
-
+    });
 
   describe("#create()", () => {
     it("should create a post object with a title, body, and assigned topic and user", (done) => {
@@ -120,5 +120,4 @@ const User = require("../../src/db/models").User;
     });
   });
 
-  });
 });

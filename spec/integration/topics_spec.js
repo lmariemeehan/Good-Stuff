@@ -22,7 +22,9 @@ const User = require("../../src/db/models").User;
           done();
         });
       });
+    });
 
+  //ADMIN USER
     describe("admin user performing CRUD actions for Topic", () => {
       beforeEach((done) => {
         User.create({
@@ -42,9 +44,9 @@ const User = require("../../src/db/models").User;
             (err, res, body) => {
               done();
             }
-        );
+          );
+        });
       });
-    });
 
      describe("GET /topics", () => {
       it("should respond with all topics", (done) => {
@@ -145,7 +147,7 @@ const User = require("../../src/db/models").User;
           }, (err, res, body) => {
             expect(err).toBeNull();
             Topic.findOne({
-              where: { id:1}
+              where: { id:1 }
             })
             .then((topic) => {
               expect(topic.title).toBe("JavaScript Frameworks");
@@ -155,8 +157,9 @@ const User = require("../../src/db/models").User;
         });
       });
 
-    });
+    }); //end context for admin user
 
+  //MEMBER USER
     describe("member user performing CRUD actions for Topic", () => {
       beforeEach((done) => {
         request.get({
@@ -165,6 +168,7 @@ const User = require("../../src/db/models").User;
             role: "member"
           }
         });
+          (err, res, body) => {
             done();
       });
 
@@ -278,6 +282,6 @@ const User = require("../../src/db/models").User;
             });
           });
         });
-      });
-    });
+      }); //end context for member user
+
   });

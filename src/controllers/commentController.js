@@ -6,16 +6,13 @@ module.exports = {
  create(req, res, next){
 // #2
    const authorized = new Authorizer(req.user).create();
-
    if(authorized) {
-
 // #3
      let newComment = {
        body: req.body.body,
        userId: req.user.id,
        postId: req.params.postId
      };
-
 // #4
      commentQueries.createComment(newComment, (err, comment) => {
 // #5

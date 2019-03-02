@@ -6,7 +6,6 @@ const sequelize = require("../../src/db/models/index").sequelize;
 
   describe("routes : users", () => {
     beforeEach((done) => {
-
       sequelize.sync({force: true})
       .then(() => {
         done();
@@ -15,6 +14,7 @@ const sequelize = require("../../src/db/models/index").sequelize;
         console.log(err);
         done();
       });
+    });
 
       describe("GET /users/sign_up", () => {
         it("should render a view with a sign up form", (done) => {
@@ -29,7 +29,6 @@ const sequelize = require("../../src/db/models/index").sequelize;
       describe("POST /users", () => {
     // #1
         it("should create a new user with valid values and redirect", (done) => {
-
           const options = {
             url: base,
             form: {
@@ -37,7 +36,6 @@ const sequelize = require("../../src/db/models/index").sequelize;
               password: "123456789"
             }
           }
-
           request.post(options,
             (err, res, body) => {
     // #2
@@ -55,6 +53,7 @@ const sequelize = require("../../src/db/models/index").sequelize;
             }
           );
         });
+
     // #3
         it("should not create a new user with invalid attributes and redirect", (done) => {
           request.post(
@@ -90,5 +89,5 @@ const sequelize = require("../../src/db/models/index").sequelize;
         });
       });
 
-    });
+
   });

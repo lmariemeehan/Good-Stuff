@@ -10,9 +10,7 @@ const User = require("../../src/db/models").User;
 const Comment = require("../../src/db/models").Comment;
 
 describe("routes : comments", () => {
-
   beforeEach((done) => {
-
 // #2
     this.user;
     this.topic;
@@ -69,10 +67,8 @@ describe("routes : comments", () => {
     });
   });
 
-  //test suites will go there
-  // #1
+  // #1 GUEST USER
      describe("guest attempting to perform CRUD actions for Comment", () => {
-
   // #2
        beforeEach((done) => {    // before each suite in this context
          request.get({           // mock authentication
@@ -86,10 +82,8 @@ describe("routes : comments", () => {
            }
          );
        });
-
   // #3
        describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
-
          it("should not create a new comment", (done) => {
            const options = {
              url: `${base}${this.topic.id}/posts/${this.post.id}/comments/create`,
@@ -116,14 +110,11 @@ describe("routes : comments", () => {
 
   // #5
      describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
-
          it("should not delete the comment with the associated ID", (done) => {
            Comment.all()
            .then((comments) => {
              const commentCountBeforeDelete = comments.length;
-
              expect(commentCountBeforeDelete).toBe(1);
-
              request.post(
                `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
                (err, res, body) => {
@@ -133,16 +124,14 @@ describe("routes : comments", () => {
                  expect(comments.length).toBe(commentCountBeforeDelete);
                  done();
                })
-
              });
            })
          });
        });
      }); //end context for guest user
 
- // #1
+ // #1 SIGNED IN USER
      describe("signed in user performing CRUD actions for Comment", () => {
-
        beforeEach((done) => {    // before each suite in this context
          request.get({           // mock authentication
            url: "http://localhost:3000/auth/fake",
@@ -159,7 +148,6 @@ describe("routes : comments", () => {
 
 // #2
      describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
-
        it("should create a new comment and redirect", (done) => {
          const options = {
            url: `${base}${this.topic.id}/posts/${this.post.id}/comments/create`,
@@ -187,14 +175,11 @@ describe("routes : comments", () => {
 
 // #3
      describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
-
        it("should delete the comment with the associated ID", (done) => {
          Comment.all()
          .then((comments) => {
            const commentCountBeforeDelete = comments.length;
-
            expect(commentCountBeforeDelete).toBe(1);
-
            request.post(
             `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
              (err, res, body) => {
@@ -205,12 +190,9 @@ describe("routes : comments", () => {
                expect(comments.length).toBe(commentCountBeforeDelete - 1);
                done();
              })
-
            });
          })
-
        });
-
      });
 
    }); //end context for signed in user
