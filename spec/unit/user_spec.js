@@ -12,7 +12,8 @@ const User = require("../../src/db/models").User;
         console.log(err);
         done();
       });
-
+    });
+    
     describe("#create()", () => {
   // #2
       it("should create a User object with a valid email and password", (done) => {
@@ -82,5 +83,4 @@ const User = require("../../src/db/models").User;
       });
     });
 
-    });
   });

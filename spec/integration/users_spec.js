@@ -15,6 +15,7 @@ const sequelize = require("../../src/db/models/index").sequelize;
         console.log(err);
         done();
       });
+    });
 
       describe("GET /users/sign_up", () => {
         it("should render a view with a sign up form", (done) => {
@@ -90,5 +91,4 @@ const sequelize = require("../../src/db/models/index").sequelize;
         });
       });
 
-    });
   });

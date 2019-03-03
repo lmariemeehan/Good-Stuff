@@ -13,8 +13,8 @@ const User = require("../../src/db/models").User;
          title: "JS Frameworks",
          description: "There is a lot of them"
        })
-        .then((topic) => {
-          this.topic = topic;
+        .then((res) => {
+          this.topic = res;
           done();
         })
         .catch((err) => {
@@ -22,7 +22,9 @@ const User = require("../../src/db/models").User;
           done();
         });
       });
+    });
 
+  //ADMIN USER CONTEXT
     describe("admin user performing CRUD actions for Topic", () => {
       beforeEach((done) => {
         User.create({
@@ -105,10 +107,12 @@ const User = require("../../src/db/models").User;
      });
 
      describe("POST /topics/:id/destroy", () => {
+
          it("should delete the topic with the associated ID", (done) => {
            Topic.all()
            .then((topics) => {
              const topicCountBeforeDelete = topics.length;
+
              expect(topicCountBeforeDelete).toBe(1);
 
              request.post(`${base}${this.topic.id}/destroy`, (err, res, body) => {
@@ -119,7 +123,7 @@ const User = require("../../src/db/models").User;
                  done();
                })
              });
-           });
+           })
          });
        });
 
@@ -145,7 +149,7 @@ const User = require("../../src/db/models").User;
           }, (err, res, body) => {
             expect(err).toBeNull();
             Topic.findOne({
-              where: { id:1}
+              where: {id:this.topic.id}
             })
             .then((topic) => {
               expect(topic.title).toBe("JavaScript Frameworks");
@@ -155,8 +159,9 @@ const User = require("../../src/db/models").User;
         });
       });
 
-    });
+    });//end of admin user context
 
+  //SIGNED IN MEMBER USER CONTEXT
     describe("member user performing CRUD actions for Topic", () => {
       beforeEach((done) => {
         request.get({
@@ -226,23 +231,23 @@ const User = require("../../src/db/models").User;
       });
 
       describe("POST /topics/:id/destroy", () => {
-          it("should delete the topic with the associated ID", (done) => {
-            Topic.all()
-            .then((topics) => {
-              const topicCountBeforeDelete = topics.length;
-              expect(topicCountBeforeDelete).toBe(1);
+        it("should delete the topic with the associated ID", (done) => {
+          Topic.all()
+          .then((topics) => {
+            const topicCountBeforeDelete = topics.length;
+            expect(topicCountBeforeDelete).toBe(1);
 
-              request.post(`${base}${this.topic.id}/destroy`, (err, res, body) => {
-                Topic.all()
-                .then((topics) => {
-                  // confirm that no topics were deleted
-                  expect(topics.length).toBe(topicCountBeforeDelete);
-                  done();
-                })
-              });
+            request.post(`${base}${this.topic.id}/destroy`, (err, res, body) => {
+              Topic.all()
+              .then((topics) => {
+                // confirm that no topics were deleted
+                expect(topics.length).toBe(topicCountBeforeDelete);
+                done();
+              })
             });
-          });
+          })
         });
+      });
 
       describe("GET /topics/:id/edit", () => {
         it("should render a view with an edit topic form", (done) => {
@@ -266,7 +271,6 @@ const User = require("../../src/db/models").User;
            };
            request.post(options,
              (err, res, body) => {
-
              expect(err).toBeNull();
              Topic.findOne({
                where: { id:1 }
@@ -278,6 +282,6 @@ const User = require("../../src/db/models").User;
             });
           });
         });
-      });
-    });
+      });//end of signed in user context
+
   });
