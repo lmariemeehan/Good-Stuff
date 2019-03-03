@@ -126,7 +126,7 @@ describe("routes : comments", () => {
 
 
   //SIGNED IN MEMBER
-     describe("signed in user performing CRUD actions for Comment", () => {
+    describe("signed in user performing CRUD actions for Comment", () => {
        beforeEach((done) => {    // before each suite in this context
          request.get({           // mock authentication
            url: "http://localhost:3000/auth/fake",
@@ -191,18 +191,26 @@ describe("routes : comments", () => {
        it("should not delete comments that belong to another user", (done) => {
          User.create({               // create an unassociated user
            email: "bob@example.com",
-           password: "password",
-           userId: 2
+           password: "password"
          })
-         .then(() => {
-            Comment.all()
-            .then((comments) => {
-              const commentCountBeforeDelete = comments.length;
-              expect(commentCountBeforeDelete).toBe(1);
+           .then((user) => {
+             request.get({           // mock authentication
+               url: "http://localhost:3000/auth/fake",
+               form: {
+                 role: "member",     // mock authenticate as member user
+                 userId: user.id
+               }
+              },
+              (err, res, body) => {
+              Comment.all()
+              .then((comments) => {
+                const commentCountBeforeDelete = comments.length;
+                expect(commentCountBeforeDelete).toBe(1);
 
               request.post(
                 `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
                 (err, res, body) => {
+                expect(res.statusCode).toBe(401); // unauthorized
                 Comment.all()
                 .then((comments) => {
                   expect(err).toBeNull();
@@ -213,11 +221,14 @@ describe("routes : comments", () => {
                 console.log(err);
                 done();
                 });
+               });
               });
-            });
+             }
+            );
           });
-        });
-      });
+         });
+       });
+
     }); //end context for signed in member
 
     //ADMIN MEMBER CONTEXT
