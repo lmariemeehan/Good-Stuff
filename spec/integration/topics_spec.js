@@ -114,6 +114,7 @@ const User = require("../../src/db/models").User;
              expect(topicCountBeforeDelete).toBe(1);
 
              request.post(`${base}${this.topic.id}/destroy`, (err, res, body) => {
+                expect(res.statusCode).toBe(302);
                Topic.all()
                .then((topics) => {
                  expect(err).toBeNull();
@@ -170,6 +171,7 @@ const User = require("../../src/db/models").User;
         });
           (err, res, body) => {
             done();
+          };
       });
 
       describe("GET /topics", () => {
