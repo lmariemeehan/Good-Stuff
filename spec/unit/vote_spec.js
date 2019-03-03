@@ -118,6 +118,9 @@ describe("Vote", () => {
         done();
       })
     });
+
+    //Create a vote with a value of anything other than 1 or -1. This scenario should not be successful.
+    
   });
 
   describe("#setUser()", () => {
