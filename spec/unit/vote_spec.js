@@ -84,6 +84,25 @@ describe("Vote", () => {
       });
     });
 
+    //ASSIGNMENT TEST - Create a vote with a value of anything other than 1 or -1. This scenario should not be successful.
+    it("should only allow a value of 1 for an upvote", (done) => {
+      Vote.create({
+        value: 2,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+      .then((vote) => {
+        // the code in this block will not be evaluated since the validation error
+        // will skip it. Instead, we'll catch the error in the catch block below
+        // and set the expectations there
+        done();
+      })
+      .catch((err) => {
+        expect(err.message).toContain("Validation error: Validation isIn on value failed")
+        done();
+      });
+    });
+
     it("should create a downvote on a post for a user", (done) => {
       Vote.create({
         value: -1,
@@ -98,6 +117,25 @@ describe("Vote", () => {
       })
       .catch((err) => {
         console.log(err);
+        done();
+      });
+    });
+
+    //ASSIGNMENT TEST - Create a vote with a value of anything other than 1 or -1. This scenario should not be successful.
+    it("should only allow a value of -1 for a downvote", (done) => {
+      Vote.create({
+        value: -2,
+        postId: this.post.id,
+        userId: this.user.id
+      })
+      .then((vote) => {
+        // the code in this block will not be evaluated since the validation error
+        // will skip it. Instead, we'll catch the error in the catch block below
+        // and set the expectations there
+        done();
+      })
+      .catch((err) => {
+        expect(err.message).toContain("Validation error: Validation isIn on value failed")
         done();
       });
     });
@@ -119,12 +157,20 @@ describe("Vote", () => {
       })
     });
 
-    //ASSIGNMENT TEST - Create a vote with a value of anything other than 1 or -1. This scenario should not be successful.
-    it("should only allow 1 or -1 values for votes", (done) => {
+    //ASSIGNMENT TEST - Create more than one vote per user for a given post. This scenario should not be successful.
+    it("should not allow more than one vote per user", (done) => {
       Vote.create({
-        value: 2,
+        value: 1,
         postId: this.post.id,
         userId: this.user.id
+      })
+      .then((vote) => {
+        Vote.create({
+          value: 1,
+          postId: this.post.id,
+          userId: this.user.id
+        })
+        done();
       })
       .then((vote) => {
         // the code in this block will not be evaluated since the validation error
@@ -133,33 +179,13 @@ describe("Vote", () => {
         done();
       })
       .catch((err) => {
-        expect(err.message).toContain("Vote.value can only be 1 or -1.")
+        expect(err.message).toContain("Only one vote allowed per post.")
         expect(vote.postId).toBe(this.post.id);
         expect(vote.userId).toBe(this.user.id);
         done();
       });
     });
 
-    //ASSIGNMENT TEST - Create more than one vote per user for a given post. This scenario should not be successful.
-    it("should not allow more than one vote per user", (done) => {
-      Vote.z({
-        value: 1,
-        postId: this.post.id,
-        userId: this.user.id
-      })
-      .then((vote) => {
-        // the code in this block will not be evaluated since the validation error
-        // will skip it. Instead, we'll catch the error in the catch block below
-        // and set the expectations there
-        done();
-      })
-      .catch((err) => {
-        expect(err.message).toContain("Vote.value can only be 1 or -1.")
-        expect(vote.postId).toBe(this.post.id);
-        expect(vote.userId).toBe(this.user.id);
-        done();
-      });
-    });
   });
 
   describe("#setUser()", () => {
