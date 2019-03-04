@@ -177,4 +177,31 @@ const User = require("../../src/db/models").User;
          });
        });
 
+      //ASSIGNMENT - TEST Write a test for a method called hasUpvoteFor(). We will call this method on a Post object with userId as an argument. It returns true if the user with the matching userId has an upvote for the post. Implement the method.
+      describe("GET /topics/:topicsId/posts/:postId/hasUpvoteFor", () => {
+        ("it should return true if there is a matching userId for this upvote", (done) => {
+          request.get(`${base}/${this.topic.id}/posts/hasUpvoteFor`, (err, res, body) => {
+            const options ={
+              url: `${base}/${this.topic.id}/posts/hasUpvoteFor`,
+              form:{
+                title: "a",
+                body: "b"
+              }
+            }
+            done();
+          })
+        })
+      });
+
+      //ASSIGNMENT - TEST Write a test for a method called hasDownvoteFor(). We will call this method on a Post object with userId as an argument. It returns true if the user with the matching userId has a downvote for the post. Implement the method.
+      describe("GET /topics/:topicsId/posts/:postId/hasDownvoteFor", () => {
+        ("it should return true if there is a matching userId for this downvote", (done) => {
+          request.get(`${base}/${this.topic.id}/posts/hasDownvoteFor`, (err, res, body) => {
+
+            done();
+          })
+        })
+      });
+
+
   });

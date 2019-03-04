@@ -5,7 +5,7 @@ const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const User = require("../../src/db/models").User;
 
-  describe("routes : topics", () => {
+  fdescribe("routes : topics", () => {
     beforeEach((done) => {
       this.topic;
       sequelize.sync({force: true}).then((res) => {
@@ -166,11 +166,11 @@ const User = require("../../src/db/models").User;
           url: "http://localhost:3000/auth/fake",
           form: {
             role: "member"
-          }
-        });
+            }
+          },
           (err, res, body) => {
             done();
-          };
+          });
       });
 
       describe("GET /topics", () => {
