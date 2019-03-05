@@ -2,6 +2,7 @@ const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const User = require("../../src/db/models").User;
+const Vote = require("../../src/db/models").Vote;
 
   describe("Post", () => {
     beforeEach((done) => {
@@ -115,6 +116,103 @@ const User = require("../../src/db/models").User;
       this.post.getUser()
       .then((associatedUser) => {
         expect(associatedUser.email).toBe("starman@tesla.com");
+        done();
+      });
+    });
+  });
+
+  //ASSIGNMENT TEST 3: Write a test for the getPoints method of the Post model.
+  describe("#getPoints()", () => {
+    it("should return the total points for the selected post", (done) => {
+      Post.create({
+        title: "Testing, testing, 1,2,3",
+        body: "1. Let's see if I can gather the total points.",
+        topicId: this.topic.id,
+        userId: this.user.id,
+        votes: [{
+          value: 1,
+          userId: this.userId,
+          postId: this.postId
+        }]
+      }, {
+        include: {
+          model: Vote,
+          as: "votes"
+        }
+      })
+      .then ((post) => {
+        const totalPoints = Post.getPoints();
+        expect(this.post.votes).toBe(totalPoints);
+        done();
+      })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+    })
+  });
+
+  //ASSIGNMENT - TEST 4: Write a test for a method called hasUpvoteFor(). We will call this method on a Post object with userId as an argument. It returns true if the user with the matching userId has an upvote for the post. Implement the method.
+  describe("GET /topics/:topicsId/posts/:postId/hasUpvoteFor", () => {
+    ("it should return true if there is a matching userId for this upvote", (done) => {
+      Post.create({
+        title: "Testing, testing, 1,2,3",
+        body: "2. Hmmm..let's see who liked my post.",
+        topicId: this.topic.id,
+        userId: this.user.id,
+        votes: [{
+          value: 1,
+          userId: this.userId,
+          postId: this.postId
+        }]
+      }, {
+        include: {
+          model: Vote,
+          as: "votes"
+        }
+      })
+        .then((post) => {
+          this.post.hasUpvoteFor()
+          .then((associatedVote) => {
+            expect(associatedVote.userId).toBe(this.post.userId); // ensure the right user is returned
+            done();
+          })
+        })
+      .catch((err) => {
+        console.log(err);
+        done();
+      });
+    });
+  });
+
+  //ASSIGNMENT - TEST 5: Write a test for a method called hasDownvoteFor(). We will call this method on a Post object with userId as an argument. It returns true if the user with the matching userId has a downvote for the post. Implement the method.
+  describe("GET /topics/:topicsId/posts/:postId/hasDownvoteFor", () => {
+    ("it should return true if there is a matching userId for this downvote", (done) => {
+      Post.create({
+        title: "Testing, testing, 1,2,3",
+        body: "3. Haters going to hate.",
+        topicId: this.topic.id,
+        userId: this.user.id,
+        votes: [{
+          value: 1,
+          userId: this.userId,
+          postId: this.postId
+        }]
+      }, {
+        include: {
+          model: Vote,
+          as: "votes"
+        }
+      })
+        .then((post) => {
+          this.post.hasDownvoteFor()
+          .then((associatedVote) => {
+            expect(associatedVote.userId).toBe(this.post.userId); // ensure the right user is returned
+            done();
+          })
+        })
+      .catch((err) => {
+        console.log(err);
         done();
       });
     });

@@ -135,7 +135,6 @@ describe("routes : votes", () => {
             }
           );
         });
-
       });
 
       describe("GET /topics/:topicId/posts/:postId/votes/downvote", () => {
@@ -167,44 +166,6 @@ describe("routes : votes", () => {
         });
       });
 
-      //ASSIGNMENT TEST - Write a test for the getPoints method of the Post model.
-      describe("#getPoints()", () => {
-        it("should return the total accrued points for selected post", (done) => {
-          const options = {
-            url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
-          };
-          Vote.create({
-            value: 1,
-            postId: this.post.id,
-            userId: this.user.id
-          })
-          .then ((votes) => {
-          Vote.all()
-          .then ((votes) => {
-            const grandTotalVotes = votes.length;
-            expect(grandTotalVotes).toBe(1);
-          })
-          request.get(options,
-            (err, res, body) => {
-              Vote.findAll({            // look for all the votes
-                where: {
-                  userId: this.user.id,
-                  postId: this.post.id
-                }
-              })
-              .then((votes) => {
-                expect(votes).toBe(grandTotalVotes);
-                done();
-              })
-              .catch((err) => {
-                console.log(err);
-                done();
-              });
-            })
-          });
-        });
-      });
     }); //end context for signed in user
-
 
 });

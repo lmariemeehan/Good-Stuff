@@ -5,7 +5,7 @@ const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const User = require("../../src/db/models").User;
 
-  fdescribe("routes : topics", () => {
+  describe("routes : topics", () => {
     beforeEach((done) => {
       this.topic;
       sequelize.sync({force: true}).then((res) => {
