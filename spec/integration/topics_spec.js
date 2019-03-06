@@ -167,9 +167,11 @@ const User = require("../../src/db/models").User;
           form: {
             role: "member"
           }
-        });
+        },
           (err, res, body) => {
             done();
+          }
+        );
       });
 
       describe("GET /topics", () => {
@@ -282,6 +284,6 @@ const User = require("../../src/db/models").User;
             });
           });
         });
-      }); //end context for member user
+    }); //end context for member user
 
   });

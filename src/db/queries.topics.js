@@ -1,5 +1,6 @@
 const Topic = require("./models").Topic;
 const Post = require("./models").Post;
+const Authorizer = require("../policies/topic");
 
   module.exports = {
 
@@ -65,7 +66,7 @@ const Post = require("./models").Post;
            });
      },
 
-     updateTopic(id, updatedTopic, callback){
+     updateTopic(req, updatedTopic, callback){
        // #1
       return Topic.findById(req.params.id)
       .then((topic) => {
