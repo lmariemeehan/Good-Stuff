@@ -1,11 +1,12 @@
 const request = require("request");
 const server = require("../../src/server");
 const base = "http://localhost:3000/users/";
+const sequelize = require("../../src/db/models/index").sequelize;
 const User = require("../../src/db/models").User;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
 const Comment = require("../../src/db/models").Comment;
-const sequelize = require("../../src/db/models/index").sequelize;
+const Favorite = require("../../src/db/models").Favorite;
 
   describe("routes : users", () => {
     beforeEach((done) => {
@@ -30,7 +31,6 @@ const sequelize = require("../../src/db/models/index").sequelize;
       });
 
       describe("POST /users", () => {
-    // #1
         it("should create a new user with valid values and redirect", (done) => {
           const options = {
             url: base,
@@ -57,7 +57,6 @@ const sequelize = require("../../src/db/models/index").sequelize;
           );
         });
 
-    // #3
         it("should not create a new user with invalid attributes and redirect", (done) => {
           request.post(
             {
@@ -138,10 +137,32 @@ const sequelize = require("../../src/db/models/index").sequelize;
         it("should present a list of comments and posts a user has created", (done) => {
           request.get(`${base}${this.user.id}`, (err, res, body) => {
             expect(body).toContain("Snowball Fighting");
-            expect(body).toContain("This comment is alright.");
+            expect(body).toContain("This comment is alright.")
             done();
           });
         });
+
+      //ASSIGNMENT QUESTION
+        it("should present a list of the favorited posts for a user", (done) => {
+          request.get(`${base}${this.user.id}`, (err, res, body) => {
+            Favorite.findAll({
+              where: {
+                userId: this.user.id,
+                postId: this.post.id
+              }
+            })
+            .then((favorite) => {
+            expect(body).toContain("Snowball Fighting");
+            expect(body).toContain("This comment is alright.");
+            done();
+            })
+            .catch((err) => {
+              console.log(err);
+              done();
+            })
+          });
+        });
+
       });
 
   });
